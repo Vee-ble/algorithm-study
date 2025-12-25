@@ -8,10 +8,11 @@ const filePath =
 
 const input = fs.readFileSync(filePath).toString().trim().split(/\r?\n/);
 
-function solution() {
-  // 입력 파싱
-  // const N = Number(input[0]);
-  // 로직
-  // console.log(answer);
+for (let i = 1; i < input.length; i++) {
+  const s = input[i];
+  if (s === "P=NP") console.log("skipped");
+  else {
+    const sum = s.split("+").reduce((acc, cur) => acc + Number(cur), 0);
+    console.log(sum);
+  }
 }
-solution(N, input);
