@@ -81,7 +81,7 @@ boostcamp-algorithm-study/
 > PGS || BAK || LEET
 > | Type | Description | Example |
 > | :--------- | :-------------------------- | :--------------------------------------- |
-> | `solve` | 문제 해결 및 코드 업로드 | `solve: [BOJ] 토마토 / 골드5 / 40분` |
+> | `solve` | 문제 해결 및 코드 업로드 | `solve: [BOJ] 토마토 / 골드5 / 50m` |
 > | `fix` | 버그 수정 및 로직 개선 | `fix: [PGS] 타겟넘버 / 예외 케이스 처리` |
 > | `refactor` | 코드 리팩토링 (결과 변경 X) | `refactor: 변수명 변경 및 함수 분리` |
 > | `docs` | 문서(README) 수정 | `docs: 1주차 회고 작성` |
@@ -94,7 +94,7 @@ boostcamp-algorithm-study/
 | :-------------: | :----: | :----: |
 |  **Baekjoon**   | bronze |   2    |
 |  **Baekjoon**   | Silver |   5    |
-|  **Baekjoon**   |  Gold  |   1    |
+|  **Baekjoon**   |  Gold  |   2    |
 | **Programmers** | Lv. 2  |   4    |
 | **Programmers** | Lv. 3  |   0    |
-|    **Total**    |   -    | **12** |
+|    **Total**    |   -    | **13** |
