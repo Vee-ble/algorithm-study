@@ -9,9 +9,6 @@ const filePath =
 const input = fs.readFileSync(filePath).toString().trim().split(/\r?\n/);
 
 function solution() {
-  // 입력 파싱
-  // const N = Number(input[0]);
-  // 로직
-  // console.log(answer);
+  //
 }
 solution();
