@@ -94,8 +94,8 @@ boostcamp-algorithm-study/
 |    Platform     | Level  | Solved |
 | :-------------: | :----: | :----: |
 |  **Baekjoon**   | bronze |   4    |
-|  **Baekjoon**   | Silver |   31   |
+|  **Baekjoon**   | Silver |   32   |
 |  **Baekjoon**   |  Gold  |   18   |
 | **Programmers** | Lv. 2  |   5    |
 | **Programmers** | Lv. 3  |   0    |
-|    **Total**    |   -    | **57** |
+|    **Total**    |   -    | **58** |
