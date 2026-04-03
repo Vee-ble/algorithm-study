@@ -16,17 +16,18 @@ for (let i = 1; i <= N; i++) {
 }
 
 function solution(arr, n) {
+  // 길이가 1일 때
   if (arr.length === 1) return arr[0][0];
 
   let nextArr = [];
 
   for (let i = 0; i < n; i += 2) {
-    let rowArr = [];
+    const rowArr = [];
     for (let j = 0; j < n; j += 2) {
       const towBox = [
         arr[i][j],
-        arr[i][j + 1],
         arr[i + 1][j],
+        arr[i][j + 1],
         arr[i + 1][j + 1],
       ].sort((a, b) => b - a);
 
