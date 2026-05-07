@@ -9,12 +9,25 @@ server.on("connection", (socket) => {
 
   socket.on("data", function (data) {
     const s = data.toString();
-    const r = s.slice(0, s.indexOf("\r\n"));
-    const [method, path, version] = r.split(" ");
+    const headerEndIndex = s.indexOf("\r\n\r\n");
+    const headerSection = s.slice(0, headerEndIndex);
+    const bodySection = s.slice(headerEndIndex + 4);
+    const headers = {};
 
-    console.log("METHOD:", method);
-    console.log("PATH:", path);
-    console.log("VERSION:", version);
+    const split = headerSection.split("\r\n");
+    const requestLine = split[0];
+    const headerLines = split.slice(1);
+
+    headerLines.forEach((line) => {
+      const colonIndex = line.indexOf(":");
+      const name = line.slice(0, colonIndex).toLowerCase();
+      const value = line.slice(colonIndex + 1).trim();
+      headers[name] = value;
+    });
+
+    console.log(headers);
+    console.log(bodySection);
+    const [method, path, version] = requestLine.split(" ");
 
     let body = "";
     let statusLine = "HTTP/1.1 200 OK";
@@ -43,7 +56,6 @@ server.on("connection", (socket) => {
         body,
     );
 
-    console.log(contentLength);
     socket.end();
   });
 });
