@@ -7,6 +7,9 @@ const HEADER_BODY_SEPARATOR = CRLF + CRLF;
 
 const server = net.createServer();
 
+let items = [];
+let nextId = 1;
+
 server.on("connection", (socket) => {
   console.log("CONNECTED:", socket.remoteAddress + ":" + socket.remotePort);
 
@@ -23,9 +26,9 @@ server.on("connection", (socket) => {
 
     logRequest(parsedRequest);
 
-    const { statusLine, body } = routeRequest(parsedRequest);
+    const { statusLine, body, contentType } = routeRequest(parsedRequest);
 
-    const response = buildHttpResponse(statusLine, body);
+    const response = buildHttpResponse(statusLine, body, contentType);
 
     socket.end(response);
   });
@@ -106,26 +109,56 @@ function parseHeaders(headerLines) {
 
 /** method/path를 보고 어떤 응답을 줄지 결정 */
 function routeRequest(request) {
-  const { method, path } = request;
+  const { method, path, bodySection } = request;
 
-  if (method !== "GET") {
+  if (method === "GET") {
+    if (path === "/") {
+      return {
+        statusLine: "HTTP/1.1 200 OK",
+        body: "Home",
+      };
+    }
+
+    if (path === "/hello") {
+      return {
+        statusLine: "HTTP/1.1 200 OK",
+        body: "Hello",
+      };
+    }
+
+    if (path === "/items") {
+      const body = JSON.stringify(items);
+
+      return {
+        statusLine: "HTTP/1.1 200 OK",
+        contentType: "application/json; charset=utf-8",
+        body,
+      };
+    }
+  } else if (method === "POST") {
+    if (path === "/items") {
+      try {
+        const data = JSON.parse(bodySection);
+        data["id"] = nextId;
+        nextId++;
+        items.push(data);
+
+        console.log("ITEMS:", items);
+        return {
+          statusLine: "HTTP/1.1 201 Created",
+          body: "Created",
+        };
+      } catch (error) {
+        return {
+          statusLine: "HTTP/1.1 400 Bad Request",
+          body: "Bad Request",
+        };
+      }
+    }
+  } else {
     return {
       statusLine: "HTTP/1.1 405 Method Not Allowed",
       body: "Method Not Allowed",
-    };
-  }
-
-  if (path === "/") {
-    return {
-      statusLine: "HTTP/1.1 200 OK",
-      body: "Home",
-    };
-  }
-
-  if (path === "/hello") {
-    return {
-      statusLine: "HTTP/1.1 200 OK",
-      body: "Hello",
     };
   }
 
@@ -136,12 +169,16 @@ function routeRequest(request) {
 }
 
 /** HTTP 응답 문자열 생성 */
-function buildHttpResponse(statusLine, body) {
+function buildHttpResponse(
+  statusLine,
+  body,
+  contentType = "text/plain; charset=utf-8",
+) {
   const contentLength = Buffer.byteLength(body);
 
   return (
     `${statusLine}${CRLF}` +
-    `Content-Type: text/plain; charset=utf-8${CRLF}` +
+    `Content-Type: ${contentType}${CRLF}` +
     `Content-Length: ${contentLength}${CRLF}` +
     `Connection: close${CRLF}` +
     `${CRLF}` +
@@ -150,12 +187,12 @@ function buildHttpResponse(statusLine, body) {
 }
 
 function logRequest(request) {
-  console.log("METHOD:", request.method);
-  console.log("PATH:", request.path);
-  console.log("VERSION:", request.version);
-  console.log("HEADERS:", request.headers);
-  console.log("BODY SECTION:", request.bodySection);
-  console.log("EXPECTED BODY LENGTH:", request.expectedBodyLength);
-  console.log("ACTUAL BODY LENGTH:", request.actualBodyLength);
-  console.log("REQUEST COMPLETE:", request.complete);
+  // console.log("METHOD:", request.method);
+  // console.log("PATH:", request.path);
+  // console.log("VERSION:", request.version);
+  // console.log("HEADERS:", request.headers);
+  // console.log("BODY SECTION:", request.bodySection);
+  // console.log("EXPECTED BODY LENGTH:", request.expectedBodyLength);
+  // console.log("ACTUAL BODY LENGTH:", request.actualBodyLength);
+  // console.log("REQUEST COMPLETE:", request.complete);
 }
