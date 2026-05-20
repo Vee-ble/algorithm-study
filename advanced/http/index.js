@@ -111,6 +111,8 @@ function parseHeaders(headerLines) {
 function routeRequest(request) {
   const { method, path, bodySection } = request;
 
+  const parts = path.split("/");
+
   if (method === "GET") {
     if (path === "/") {
       return {
@@ -119,14 +121,32 @@ function routeRequest(request) {
       };
     }
 
-    if (path === "/hello") {
+    if (parts[1] === "hello") {
       return {
         statusLine: "HTTP/1.1 200 OK",
         body: "Hello",
       };
     }
 
-    if (path === "/items") {
+    if (parts[1] === "items") {
+      if (parts[2]) {
+        const id = Number(parts[2]);
+
+        const item = items.find((item) => item.id === id);
+        if (item) {
+          const body = JSON.stringify(item);
+          return {
+            statusLine: "HTTP/1.1 200 OK",
+            contentType: "application/json; charset=utf-8",
+            body,
+          };
+        } else {
+          return {
+            statusLine: "HTTP/1.1 404 Not Found",
+            body: "Not Found",
+          };
+        }
+      }
       const body = JSON.stringify(items);
 
       return {
@@ -136,7 +156,7 @@ function routeRequest(request) {
       };
     }
   } else if (method === "POST") {
-    if (path === "/items") {
+    if (parts[1] === "items") {
       try {
         const data = JSON.parse(bodySection);
         data["id"] = nextId;
@@ -155,6 +175,8 @@ function routeRequest(request) {
         };
       }
     }
+  } else if (method === "PUT") {
+    path;
   } else {
     return {
       statusLine: "HTTP/1.1 405 Method Not Allowed",
