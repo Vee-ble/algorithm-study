@@ -176,7 +176,41 @@ function routeRequest(request) {
       }
     }
   } else if (method === "PUT") {
-    path;
+    if (parts[1] === "items") {
+      if (parts[2]) {
+        const id = Number(parts[2]);
+
+        const itemIdx = items.findIndex((item) => item.id === id);
+        if (itemIdx === -1) {
+          return {
+            statusLine: "HTTP/1.1 404 Not Found",
+            body: "Not Found",
+          };
+        }
+        if (itemIdx !== -1) {
+          try {
+            const data = JSON.parse(bodySection);
+
+            const updatedItem = { ...data, id };
+
+            items[itemIdx] = updatedItem;
+
+            const body = JSON.stringify(updatedItem);
+
+            return {
+              statusLine: "HTTP/1.1 200 OK",
+              contentType: "application/json; charset=utf-8",
+              body,
+            };
+          } catch (error) {
+            return {
+              statusLine: "HTTP/1.1 400 Bad Request",
+              body: "Bad Request",
+            };
+          }
+        }
+      }
+    }
   } else {
     return {
       statusLine: "HTTP/1.1 405 Method Not Allowed",
