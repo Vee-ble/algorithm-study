@@ -211,6 +211,28 @@ function routeRequest(request) {
         }
       }
     }
+  } else if (method === "DELETE") {
+    if (parts[1] === "items" && parts[2]) {
+      const id = Number(parts[2]);
+
+      const itemIdx = items.findIndex((item) => item.id === id);
+
+      if (itemIdx === -1) {
+        return {
+          statusLine: "HTTP/1.1 404 Not Found",
+          body: "Not Found",
+        };
+      }
+
+      items.splice(itemIdx, 1);
+
+      console.log("ITEMS:", items);
+
+      return {
+        statusLine: "HTTP/1.1 204 No Content",
+        body: "",
+      };
+    }
   } else {
     return {
       statusLine: "HTTP/1.1 405 Method Not Allowed",
